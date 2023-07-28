@@ -63,9 +63,13 @@ const App = () => {
           setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson ))
           notifyWith(`phone number of ${person.name} updated!`)
         })
-        .catch(() => {
-          notifyWith(`${person.name} has already been removed`, 'error')
-          setPersons(persons.filter(p => p.id !== person.id))
+        .catch((error) => {
+          if(error.response.status === 400) {
+            notifyWith(error.response.data.error, 'error')
+          } else {
+            notifyWith(`${person.name} has already been removed`, 'error')
+            setPersons(persons.filter(p => p.id !== person.id))
+          }
         })
         setNewName('')
         setNewNumber('')

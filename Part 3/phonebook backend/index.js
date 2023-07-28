@@ -1,22 +1,26 @@
 const express = require('express')
-const app = express()
-var morgan = require('morgan')
+const cors = require('cors')
+const morgan = require('morgan')
 require('dotenv').config()
 
 const Person = require('./models/person')
+
+const app = express()
+
+app.use(express.json())
+app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('output', (req) => {
   return JSON.stringify(req.body)
 })
 
-app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :output '))
-app.use(express.static('build'))
 
 app.get('/api/info', (req, res) => {
   Person.count({}).then(count => {
     res.send(
-      `<p>Phonebook has info for ${count}</p><p>${Date()}</p>`
+      `Phonebook has info for ${count}</p><p>${Date()}`
     )
   })
 })
@@ -81,12 +85,6 @@ app.put('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => next(error))
 })
-
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
   console.error(error.message)

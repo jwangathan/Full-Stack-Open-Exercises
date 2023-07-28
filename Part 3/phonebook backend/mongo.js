@@ -1,42 +1,29 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
+const Person = require('./models/person')
 
 if (process.argv.length<3) {
   console.log('give password as argument')
   process.exit(1)
 }
 
-const password = process.argv[2]
-
-const url =
-  `mongodb+srv://jonathanghwang5541:${password}@cluster0.bnong6w.mongodb.net/?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
-
-const Person = mongoose.model('Person', personSchema)
-
-// eslint-disable-next-line no-unused-vars
-const person = new Person({
-  name: 'Jonathan Wang',
-  number: '626-378-5541',
-})
-
-
-// person.save().then(result => {
-//     console.log(`added ${result.name} number ${result.number} to phonebook`)
-//     mongoose.connection.close()
-// })
-
-console.log('phonebook:')
-Person.find({}).then(result => {
-  result.forEach(person => {
-    console.log(`${person.name} ${person.number}`)
+if (process.argv.length<4) {
+  Person.find({}).then(result => {
+    console.log('phonebook:')
+    result.forEach(person => {
+      console.log(`${person.name} ${person.number}`)
+    })
+    mongoose.connection.close()
   })
-  mongoose.connection.close()
-})
-
+} else {
+  const name = process.argv[2]
+  const number = process.argv[3]
+  const person = new Person({
+    name,
+    number,
+  })
+  person.save().then(result => {
+    console.log(`added ${result.name} number ${result.number} to phonebook`)
+    mongoose.connection.close()
+  })
+}
