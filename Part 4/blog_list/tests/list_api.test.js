@@ -38,7 +38,7 @@ test('blogs have the right id', async () => {
 
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'New blog time',
     author: 'Brian Che',
@@ -57,6 +57,24 @@ test.only('a valid blog can be added', async () => {
   const contents = response.body.map(r => r.title)
   assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
   assert(contents.includes('New blog time'))
+})
+
+test.only('likes property exists', async () => {
+  const newBlog = {
+    title: 'i dont have likes',
+    author: 'sam guo',
+    url: 'url this'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const response = await helper.blogsInDb()
+    const currentBlog = await response.find(b => b.title === 'i dont have likes')
+    assert.strictEqual(currentBlog.likes, 0)
 })
 
 after(async () => {
