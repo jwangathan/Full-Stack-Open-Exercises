@@ -132,7 +132,7 @@ describe.only('when there is initially one user in db', () => {
     await user.save()
   })
 
-  test.only('creation succeeds with a fresh username', async () => {
+  test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
@@ -152,6 +152,27 @@ describe.only('when there is initially one user in db', () => {
       
       const usernames = usersAtEnd.map(u => u.username)
       assert(usernames.includes(newUser.username))
+  })
+
+  test.only('creation fails with a username and password that is less than 3 characters', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'jo',
+      name: 'jonathan',
+      password: 'ok'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(!usernames.includes(newUser.username))
   })
 })
 
