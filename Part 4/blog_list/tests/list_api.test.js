@@ -4,20 +4,22 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
+describe('when there is initially some blogs saved', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+  
+    const blogObjects = helper.initialBlogs
+      .map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
+  })
 
-  const blogObjects = helper.initialBlogs
-    .map(blog => new Blog(blog))
-  const promiseArray = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArray)
-})
-
-describe.only('when there is initially some blogs saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -56,7 +58,7 @@ describe.only('when there is initially some blogs saved', () => {
       assert.strictEqual(currentBlog.likes, 0)
   })
 
-  test.only('update existing blog properties', async () => {
+  test('update existing blog properties', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
@@ -117,6 +119,39 @@ describe('deletion of blog', () => {
 
     const titles = blogsAtEnd.map(r => r.title)
     assert(!titles.includes(blogToDelete.title))
+  })
+})
+
+describe.only('when there is initially one user in db', () => {
+  beforeEach(async() => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test.only('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'jwangathan',
+      name: 'Jonathan Wang',
+      password: 'password',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+      
+      const usernames = usersAtEnd.map(u => u.username)
+      assert(usernames.includes(newUser.username))
   })
 })
 
