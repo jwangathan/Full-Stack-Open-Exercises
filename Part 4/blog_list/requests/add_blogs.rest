@@ -2,7 +2,7 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvbmF0aGFuX3dhbmciLCJpZCI6IjY2MzI5YmJmYjg3MmJhOTY2MjUzNTQ1MiIsImlhdCI6MTcxNDYzOTExMn0.128su75vwnpCpsLah6hBZ4g527xNuMiWg5Ymlx0EWQ4
 
-{c
+{
     "title": "This is the Title 2",
     "author": "Jonathan Wang",
     "url": "this is url",
