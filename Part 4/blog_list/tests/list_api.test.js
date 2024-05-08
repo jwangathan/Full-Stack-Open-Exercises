@@ -102,6 +102,23 @@ describe('addition of a new blog', () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
     assert(contents.includes('New blog time'))
   })
+
+  test('fails with status code 400 if content is invalid', async () => {
+    const newBlog = {
+      author: 'Jonathan Wang',
+      url: 'new url',
+      likes: 1
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const BlogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(BlogsAtEnd.length, helper.initialBlogs.length)
+  })
 })
 
 describe('deletion of blog', () => {
@@ -132,7 +149,7 @@ describe.only('when there is initially one user in db', () => {
     await user.save()
   })
 
-  test('creation succeeds with a fresh username', async () => {
+  test.only('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
@@ -177,5 +194,6 @@ describe.only('when there is initially one user in db', () => {
 })
 
 after(async () => {
+  await User.deleteMany({})
   await mongoose.connection.close()
 })

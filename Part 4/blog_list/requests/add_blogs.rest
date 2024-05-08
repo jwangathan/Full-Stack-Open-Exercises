@@ -1,11 +1,11 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvbmF0aGFuX3dhbmciLCJpZCI6IjY2MzI5YmJmYjg3MmJhOTY2MjUzNTQ1MiIsImlhdCI6MTcxNDYzOTExMn0.128su75vwnpCpsLah6hBZ4g527xNuMiWg5Ymlx0EWQ4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvbmF0aGFuX3dhbmciLCJpZCI6IjY2M2E3OWEzMjFjNTA3ZjQzZTk3NDI1YiIsImlhdCI6MTcxNTE2MTczMn0.s6dOP7iPgcOL_CJP8PiZEDD02a0ROA75THP5Edxogks
 
 {
-    "title": "This is the Title 2",
+    "title": "Part 2",
     "author": "Jonathan Wang",
-    "url": "this is url",
-    "likes": 100,
-    "userId": "6632971e4c6ca0e286e4bd8b"
+    "url": "url again",
+    "likes": 1000,
+    "userId": "6635384ca4c370767f02f0bf"
 }
