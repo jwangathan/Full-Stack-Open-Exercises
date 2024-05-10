@@ -13,11 +13,7 @@ const User = require('../models/user')
 describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
-  
-    const blogObjects = helper.initialBlogs
-      .map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-    await Promise.all(promiseArray)
+    await Blog.insertMany(helper.initialBlogs)
   })
 
   test('blogs are returned as json', async () => {
@@ -81,8 +77,20 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
-describe('addition of a new blog', () => {
+describe.only('addition of a new blog', () => {
+  beforeEach(async() => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+    await api
+      .post('/api/users')
+      .send(helper.initialUser)
+  })
+
   test('a valid blog can be added', async () => {
+    const res = await api.post('/api/login').send({ username:helper.initialUser.username, password: helper.initialUser.password })
+    const token = res.body.token
+
     const newBlog = {
       title: 'New blog time',
       author: 'Brian Che',
@@ -93,6 +101,7 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
@@ -104,6 +113,9 @@ describe('addition of a new blog', () => {
   })
 
   test('fails with status code 400 if content is invalid', async () => {
+    const res = await api.post('/api/login').send({ username:helper.initialUser.username, password: helper.initialUser.password })
+    const token = res.body.token
+    
     const newBlog = {
       author: 'Jonathan Wang',
       url: 'new url',
@@ -113,11 +125,30 @@ describe('addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
     const BlogsAtEnd = await helper.blogsInDb()
 
     assert.strictEqual(BlogsAtEnd.length, helper.initialBlogs.length)
+  })
+
+  test.only('fails with status code 401 if token is not provided', async () => {
+    const newBlog = {
+      title: 'new blog again',
+      author: 'Jonathan Wang',
+      url: 'new url',
+      likes: 1,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+    
+      const BlogsAtEnd = await helper.blogsInDb()
+
+      assert.strictEqual(BlogsAtEnd.length, helper.initialBlogs.length)
   })
 })
 
@@ -139,7 +170,7 @@ describe('deletion of blog', () => {
   })
 })
 
-describe.only('when there is initially one user in db', () => {
+describe('when there is initially one user in db', () => {
   beforeEach(async() => {
     await User.deleteMany({})
 
@@ -149,7 +180,7 @@ describe.only('when there is initially one user in db', () => {
     await user.save()
   })
 
-  test.only('creation succeeds with a fresh username', async () => {
+  test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
@@ -171,7 +202,7 @@ describe.only('when there is initially one user in db', () => {
       assert(usernames.includes(newUser.username))
   })
 
-  test.only('creation fails with a username and password that is less than 3 characters', async () => {
+  test('creation fails with a username and password that is less than 3 characters', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
