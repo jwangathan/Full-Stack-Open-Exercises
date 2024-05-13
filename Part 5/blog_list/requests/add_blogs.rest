@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "title": "Part 2",
+    "author": "Jonathan Wang",
+    "url": "url again",
+    "likes": 1000,
+    "userId": "6635384ca4c370767f02f0bf"
+}
