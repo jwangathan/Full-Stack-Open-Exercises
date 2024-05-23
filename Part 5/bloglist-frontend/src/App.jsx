@@ -30,6 +30,10 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      setErrorMessage(`logged in ${user.name}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -57,13 +61,23 @@ const App = () => {
       url: newUrl,
     }
 
-    blogService
-      .create(blogObject)
-        .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
+      blogService
+        .create(blogObject)
+          .then(returnedBlog => {
+            setErrorMessage(`A new blog ${newTitle} by ${newAuthor}`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          setBlogs(blogs.concat(returnedBlog))
+          setNewTitle('')
+          setNewAuthor('')
+          setNewUrl('')
+          })
+        .catch(error => {
+          setErrorMessage('incorrect/missing title or author')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
   }
 
