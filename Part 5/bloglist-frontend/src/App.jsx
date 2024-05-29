@@ -65,6 +65,12 @@ const App = () => {
     setUser(null)
   }
 
+  const increaseLikeOf = async (blog) => {
+    const changedBlog = { ...blog, likes: blog.likes + 1}
+    const updatedBlog = await blogService.update(blog.id, changedBlog)
+    setBlogs(blogs.map(b => b.id !== blog.id ? b : updatedBlog))
+  }
+
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
@@ -77,7 +83,6 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         })
       .catch(error => {
-        console.log(error)
         setErrorMessage('incorrect/missing title or author')
         setTimeout(() => {
           setErrorMessage(null)
@@ -129,7 +134,7 @@ const App = () => {
           </Togglable>
 
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} toggleView={() => toggleViewOf(blog.id)} />
+            <Blog key={blog.id} blog={blog} updateLike={() => increaseLikeOf(blog)} />
           )}
         </div>
       }
