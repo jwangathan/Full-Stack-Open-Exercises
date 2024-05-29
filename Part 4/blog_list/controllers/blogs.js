@@ -4,7 +4,7 @@ const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
-    .find({}).populate('user', {username: 1, name: 1 })
+    .find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
@@ -19,6 +19,7 @@ blogsRouter.put('/:id', async (request, response) => {
   }
 
   const updateBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  await updateBlog.populate('user', { username: 1, name: 1})
   response.json(updateBlog)
 })
 
