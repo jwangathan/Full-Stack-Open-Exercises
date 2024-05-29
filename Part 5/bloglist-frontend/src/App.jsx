@@ -70,12 +70,30 @@ const App = () => {
     setBlogs(blogs.map(b => b.id !== blog.id ? b : updatedBlog))
   }
 
+  const deleteBlog = async (blog) => {
+    if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter((b) => b.id !== blog.id))
+        setErrorMessage('Successfully deleted!')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      } catch (error) {
+        setErrorMessage(`Error deleting blog '${blog.title}'`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
         .then(returnedBlog => {
-          setErrorMessage(`A new blog ${blogObject.title} by ${blogObject.author}`)
+          setErrorMessage(`A new blog '${blogObject.title}' by ${blogObject.author}`)
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
@@ -133,7 +151,7 @@ const App = () => {
           </Togglable>
 
           {blogs.sort((blog1, blog2) => blog1.likes - blog2.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} updateLike={() => increaseLikeOf(blog)} />
+            <Blog key={blog.id} blog={blog} updateLike={() => increaseLikeOf(blog)} removeBlog={() => deleteBlog(blog)} />
           )}
         </div>
       }
