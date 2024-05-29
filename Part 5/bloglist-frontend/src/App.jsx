@@ -66,8 +66,7 @@ const App = () => {
   }
 
   const increaseLikeOf = async (blog) => {
-    const changedBlog = { ...blog, likes: blog.likes + 1}
-    const updatedBlog = await blogService.update(blog.id, changedBlog)
+    const updatedBlog = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1})
     setBlogs(blogs.map(b => b.id !== blog.id ? b : updatedBlog))
   }
 

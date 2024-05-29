@@ -22,7 +22,10 @@ const create = async newBlog => {
 }
 
 const update = (id, updatedBlog) => {
-  const request = axios.put(`${baseUrl}/${id}`, updatedBlog)
+  const config = {
+    headers: { Authorization: token },
+  }
+  const request = axios.put(`${baseUrl}/${id}`, updatedBlog, config)
   return request.then(response => response.data)
 }
 
