@@ -20,7 +20,7 @@ const App = () => {
       .getAll()
       .then(initialBlogs =>
         setBlogs( initialBlogs )
-    )  
+      )
   }, [])
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
-    
+
     try {
       const user = await loginService.login({
         username, password,
@@ -66,7 +66,7 @@ const App = () => {
   }
 
   const increaseLikeOf = async (blog) => {
-    const updatedBlog = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1})
+    const updatedBlog = await blogService.update(blog.id, { ...blog, likes: blog.likes + 1 })
     setBlogs(blogs.map(b => b.id !== blog.id ? b : updatedBlog))
   }
 
@@ -92,13 +92,13 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
-        .then(returnedBlog => {
-          setErrorMessage(`A new blog '${blogObject.title}' by ${blogObject.author}`)
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
+      .then(returnedBlog => {
+        setErrorMessage(`A new blog '${blogObject.title}' by ${blogObject.author}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setBlogs(blogs.concat(returnedBlog))
-        })
+      })
       .catch(error => {
         setErrorMessage('incorrect/missing title or author')
         setTimeout(() => {
@@ -111,7 +111,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type='text'
           value={username}
           name='Username'
@@ -120,7 +120,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type='text'
           value={password}
           name='Password'
@@ -134,7 +134,7 @@ const App = () => {
   return (
     <div>
       <Notification message={errorMessage} />
-      {user === null ? 
+      {user === null ?
         <div>
           <h2>Log in to application</h2>
           {loginForm()}

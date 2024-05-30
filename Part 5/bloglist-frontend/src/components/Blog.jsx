@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, updateLike, removeBlog, user }) => {
   const [view, setView] = useState(false)
@@ -15,7 +15,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
     <div style={blogStyle}>
       {blog.title} {blog.author}
       <button onClick={() => setView(!view)}>{label}</button>
-      {view && 
+      {view &&
         <div>
           {blog.url}
           <br></br>
@@ -23,7 +23,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
           <br></br>
           {blog.user.name}
           <br></br>
-          {user.username === blog.user.username && 
+          {user.username === blog.user.username &&
             <button onClick={removeBlog}>remove</button>
           }
         </div>
