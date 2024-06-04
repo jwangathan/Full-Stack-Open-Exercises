@@ -16,7 +16,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
       {blog.title} {blog.author}
       <button onClick={() => setView(!view)}>{label}</button>
       {view &&
-        <div>
+        <div className='viewContent'>
           {blog.url}
           <br></br>
           {blog.likes} <button onClick={updateLike}>like</button>
