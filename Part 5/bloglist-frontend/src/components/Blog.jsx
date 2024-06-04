@@ -12,7 +12,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
       <button onClick={() => setView(!view)}>{label}</button>
       {view &&
