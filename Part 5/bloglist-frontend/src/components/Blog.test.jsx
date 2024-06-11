@@ -12,10 +12,12 @@ test('5.13 renders title and name by default, but not URL or likes', () => {
 
     render(<Blog blog={blog} />)
 
-    const element = screen.getByText('Title Jonathan Wang')
-    const url = screen.queryByText('website.com')
+    const element = screen.getByText('Title - Jonathan Wang')
+    const url = screen.queryByText('url: website.com')
+    const likes = screen.queryByText('likes: 0')
     expect(element).toBeDefined()
     expect(url).toBeNull()
+    expect(likes).toBeNull()
 })
 
 test('5.14 clicks the view button, and renders the URL and likes', async () => {
@@ -33,7 +35,7 @@ test('5.14 clicks the view button, and renders the URL and likes', async () => {
     await user.click(button)
     const element = container.querySelector('.viewContent')
     expect(element).toHaveTextContent('website.com')
-    expect(element).toHaveTextContent('like')
+    expect(element).toHaveTextContent('likes: like')
 })
 
 test('5.15 clicks like button twice and verifies it calls the event handler twice', async () => {
