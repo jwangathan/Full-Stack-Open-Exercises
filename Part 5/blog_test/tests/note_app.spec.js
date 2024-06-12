@@ -60,8 +60,23 @@ describe('Blog app', () => {
 
         await blogElement.getByRole('button', { name: 'view' }).click()
 
-        await page.getByRole('button', { name: 'like' }).click()
+        await blogElement.getByRole('button', { name: 'like' }).click()
         await expect(blogElement.locator('.viewContent').getByText('likes: 1')).toBeVisible()
+      })
+
+      test('a blog can be deleted', async ({ page }) => {
+        await page.pause()
+        page.on('dialog', async dialog => {
+          expect(dialog.type()).toContain('confirm')
+          expect(dialog.message()).toContain('Remove blog \'title 2\' by author 2')
+          await dialog.accept()
+        })
+        const blogText = await page.getByText('title 2 - author 2')
+        const blogElement = await blogText.locator('..')
+        await blogElement.getByRole('button', { name: 'view' }).click()
+        await blogElement.getByRole('button', { name: 'remove' }).click()
+
+        await expect(page.getByText('title 2 - author 2')).not.toBeVisible()
       })
     })
   })
