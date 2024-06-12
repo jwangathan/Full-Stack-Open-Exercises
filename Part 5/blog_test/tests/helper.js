@@ -12,5 +12,15 @@ const loginWith = async (page, username, password)  => {
     await page.getByRole('button', { name: 'create' }).click()
     await page.getByText(`${title} - ${author}`).waitFor()
   }
+
+  const likeBlog = async (page, blog, numTimes) => {
+    const blogtext = await page.getByText(blog)
+    const blogElement = await blogtext.locator('..')
+    await blogElement.getByRole('button', { name: 'view' }).click()
+    for(var i = 0; i < numTimes; i++) {
+      await blogElement.getByRole('button', { name: 'like' }).click()
+    }
+    await blogElement.getByRole('button', { name: 'hide' }).click()
+  }
   
-  export { loginWith, createNote }
+  export { loginWith, createNote, likeBlog }

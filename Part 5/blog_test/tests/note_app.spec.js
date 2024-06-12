@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createNote } = require('./helper')
+const { loginWith, createNote, likeBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -52,6 +52,7 @@ describe('Blog app', () => {
       beforeEach(async ({ page }) => {
         await createNote(page, 'title 1', 'author 1', 'url1.com')
         await createNote(page, 'title 2', 'author 2', 'url2.com')
+        await createNote(page, 'title 3', 'author 3', 'url3.com')
       })
 
       test('a blog can be liked', async ({ page }) => {
@@ -59,8 +60,8 @@ describe('Blog app', () => {
         const blogElement = await blogText.locator('..')
 
         await blogElement.getByRole('button', { name: 'view' }).click()
-
         await blogElement.getByRole('button', { name: 'like' }).click()
+
         await expect(blogElement.locator('.viewContent').getByText('likes: 1')).toBeVisible()
       })
 
@@ -96,7 +97,16 @@ describe('Blog app', () => {
         await loginWith(page, 'lindsey_chheng', 'australia')
         await blogElement.getByRole('button', { name: 'view' }).click()
         await expect(blogElement.getByText('remove')).not.toBeVisible()
+      })
 
+      test('blogs are sorted by likes', async ({ page }) => {
+        await likeBlog(page, 'title 1 - author 1', 3)
+        await likeBlog(page, 'title 2 - author 2', 2)
+        await likeBlog(page, 'title 3 - author 3', 1)
+        
+        await expect(page.locator('.blog').first()).toContainText('title 3 - author 3')
+        await expect(page.locator('.blog').nth(1)).toContainText('title 2 - author 2')
+        await expect(page.locator('.blog').last()).toContainText('title 1 - author 1')
       })
     })
   })
