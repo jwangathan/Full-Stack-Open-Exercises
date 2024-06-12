@@ -65,7 +65,6 @@ describe('Blog app', () => {
       })
 
       test('a blog can be deleted', async ({ page }) => {
-        await page.pause()
         page.on('dialog', async dialog => {
           expect(dialog.type()).toContain('confirm')
           expect(dialog.message()).toContain('Remove blog \'title 2\' by author 2')
@@ -77,6 +76,27 @@ describe('Blog app', () => {
         await blogElement.getByRole('button', { name: 'remove' }).click()
 
         await expect(page.getByText('title 2 - author 2')).not.toBeVisible()
+      })
+
+      test('a blog cannot be deleted by another user', async ({ page, request }) => {
+        await request.post('/api/users', {
+          data: {
+            name: 'Lindsey Chheng',
+            username: 'lindsey_chheng',
+            password: 'australia'
+          }
+        })
+
+        const blogText = await page.getByText('title 2 - author 2')
+        const blogElement = await blogText.locator('..')
+        await blogElement.getByRole('button', { name: 'view' }).click()
+        await expect(blogElement.getByText('remove')).toBeVisible()
+
+        await page.getByRole('button', { name: 'logout' }).click()
+        await loginWith(page, 'lindsey_chheng', 'australia')
+        await blogElement.getByRole('button', { name: 'view' }).click()
+        await expect(blogElement.getByText('remove')).not.toBeVisible()
+
       })
     })
   })
