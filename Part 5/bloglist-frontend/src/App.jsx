@@ -135,7 +135,7 @@ const App = () => {
   console.log(blogs)
   return (
     <div>
-      <Notification message={errorMessage} />
+      {errorMessage && <Notification message={errorMessage} />}
       {user === null ?
         <div>
           <h2>Log in to application</h2>
