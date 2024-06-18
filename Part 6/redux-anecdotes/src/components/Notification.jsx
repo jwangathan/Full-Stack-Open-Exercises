@@ -7,10 +7,17 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
+  console.log(notification)
+  console.log(typeof(notification))
   return (
-    <div style={style}>
-      {notification}
+    <div>
+      {notification && 
+        <div style={style}>
+          {notification}
+        </div>
+      }
     </div>
+
   )
 }
 
