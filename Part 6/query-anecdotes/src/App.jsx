@@ -4,14 +4,14 @@ import { useQuery } from '@tanstack/react-query'
 import { getAnecdotes } from './requests'
 
 const App = () => {
-
   const handleVote = (anecdote) => {
     console.log('vote')
   }
 
   const result = useQuery({
     queryKey: ['anecdotes'],
-    queryFn: getAnecdotes
+    queryFn: getAnecdotes,
+    refetchOnWindowFocus: false
   })
   console.log(JSON.parse(JSON.stringify(result)))
 
