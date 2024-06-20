@@ -22,7 +22,6 @@ const App = () => {
     setTimeout(() => {
       dispatch({ type: 'SET_EMPTY' })
     }, 5000)
-
   }
 
   const result = useQuery({
