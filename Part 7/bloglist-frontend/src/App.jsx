@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { displayNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
@@ -18,8 +18,10 @@ const App = () => {
 	const blogFormRef = useRef()
 
 	useEffect(() => {
-		blogService.getAll().then((initialBlogs) => setBlogs(initialBlogs))
+		dispatch(initializeBlogs())
 	}, [])
+
+	const blogs = useSelector((state) => state.blogs)
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -58,14 +60,7 @@ const App = () => {
 		setUser(null)
 	}
 
-	const increaseLikeOf = async (blog) => {
-		const updatedBlog = await blogService.update(blog.id, {
-			...blog,
-			likes: blog.likes + 1,
-		})
-		setBlogs(blogs.map((b) => (b.id !== blog.id ? b : updatedBlog)))
-	}
-
+	/*
 	const deleteBlog = async (blog) => {
 		if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
 			try {
@@ -77,7 +72,6 @@ const App = () => {
 			}
 		}
 	}
-
 	const addBlog = (blogObject) => {
 		blogFormRef.current.toggleVisibility()
 		blogService
@@ -95,6 +89,7 @@ const App = () => {
 				dispatch(displayNotification('incorrect/missing title or author', 5))
 			})
 	}
+	*/
 
 	const loginForm = () => (
 		<form onSubmit={handleLogin}>
@@ -138,20 +133,9 @@ const App = () => {
 					</p>
 
 					<Togglable buttonLabel="new blog" ref={blogFormRef}>
-						<BlogForm createBlog={addBlog} />
+						<BlogForm />
 					</Togglable>
-
-					{blogs
-						.sort((blog1, blog2) => blog2.likes - blog1.likes)
-						.map((blog) => (
-							<Blog
-								key={blog.id}
-								blog={blog}
-								updateLike={() => increaseLikeOf(blog)}
-								removeBlog={() => deleteBlog(blog)}
-								user={user}
-							/>
-						))}
+					<BlogList user={user} />
 				</div>
 			)}
 		</div>

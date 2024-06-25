@@ -1,65 +1,57 @@
-import { useState } from "react";
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { displayNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
+const BlogForm = () => {
+	const dispatch = useDispatch()
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    });
+	const addBlog = (event) => {
+		event.preventDefault()
+		const title = event.target.title.value
+		const author = event.target.author.value
+		const url = event.target.url.value
+		event.target.title.value = ''
+		event.target.author.value = ''
+		event.target.url.value = ''
+		dispatch(createBlog(title, author, url))
+	}
 
-    setNewTitle("");
-    setNewAuthor("");
-    setNewUrl("");
-  };
+	return (
+		<div className="formDiv">
+			<h2>create new</h2>
 
-  return (
-    <div className="formDiv">
-      <h2>create new</h2>
+			<form onSubmit={addBlog}>
+				<div>
+					Title
+					<input
+						type="text"
+						name="title"
+						placeholder="write title here"
+						data-testid="title"
+					/>
+				</div>
+				<div>
+					Author
+					<input
+						type="text"
+						name="author"
+						placeholder="write author here"
+						data-testid="author"
+					/>
+				</div>
+				<div>
+					URL
+					<input
+						type="text"
+						name="url"
+						placeholder="write url here"
+						data-testid="url"
+					/>
+				</div>
+				<button type="submit">create</button>
+			</form>
+		</div>
+	)
+}
 
-      <form onSubmit={addBlog}>
-        <div>
-          Title
-          <input
-            type="text"
-            value={newTitle}
-            name="Title"
-            onChange={(event) => setNewTitle(event.target.value)}
-            placeholder="write title here"
-            data-testid="title"
-          />
-        </div>
-        <div>
-          Author
-          <input
-            type="text"
-            value={newAuthor}
-            name="Author"
-            onChange={(event) => setNewAuthor(event.target.value)}
-            placeholder="write author here"
-            data-testid="author"
-          />
-        </div>
-        <div>
-          URL
-          <input
-            type="text"
-            value={newUrl}
-            name="URL"
-            onChange={(event) => setNewUrl(event.target.value)}
-            placeholder="write url here"
-            data-testid="url"
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  );
-};
-
-export default BlogForm;
+export default BlogForm
