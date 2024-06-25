@@ -5,13 +5,15 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import { useDispatch } from 'react-redux'
+import { displayNotification } from './reducers/notificationReducer'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
-	const [errorMessage, setErrorMessage] = useState('')
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
+	const dispatch = useDispatch()
 
 	const blogFormRef = useRef()
 
@@ -39,18 +41,12 @@ const App = () => {
 			})
 			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 			blogService.setToken(user.token)
-			setErrorMessage(`logged in ${user.name}`)
-			setTimeout(() => {
-				setErrorMessage(null)
-			}, 5000)
+			dispatch(displayNotification(`logged in ${user.name}`, 5))
 			setUser(user)
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
-			setErrorMessage('wrong credentials')
-			setTimeout(() => {
-				setErrorMessage(null)
-			}, 5000)
+			dispatch(displayNotification('wrong credentials', 5))
 		}
 	}
 
@@ -75,15 +71,9 @@ const App = () => {
 			try {
 				await blogService.remove(blog.id)
 				setBlogs(blogs.filter((b) => b.id !== blog.id))
-				setErrorMessage('Successfully deleted!')
-				setTimeout(() => {
-					setErrorMessage(null)
-				}, 5000)
+				dispatch(displayNotification('Successfully deleted!', 5))
 			} catch (error) {
-				setErrorMessage(`Error deleting blog '${blog.title}'`)
-				setTimeout(() => {
-					setErrorMessage(null)
-				}, 5000)
+				dispatch(displayNotification(`Error deleting blog '${blog.title}'`, 5))
 			}
 		}
 	}
@@ -93,19 +83,16 @@ const App = () => {
 		blogService
 			.create(blogObject)
 			.then((returnedBlog) => {
-				setErrorMessage(
-					`A new blog '${blogObject.title}' by ${blogObject.author}`
+				dispatch(
+					displayNotification(
+						`A new blog '${blogObject.title}' by ${blogObject.author} added`,
+						5
+					)
 				)
-				setTimeout(() => {
-					setErrorMessage(null)
-				}, 5000)
 				setBlogs(blogs.concat(returnedBlog))
 			})
 			.catch((error) => {
-				setErrorMessage('incorrect/missing title or author')
-				setTimeout(() => {
-					setErrorMessage(null)
-				}, 5000)
+				dispatch(displayNotification('incorrect/missing title or author', 5))
 			})
 	}
 
@@ -134,10 +121,9 @@ const App = () => {
 			<button type="submit">login</button>
 		</form>
 	)
-	console.log(blogs)
 	return (
 		<div>
-			{errorMessage && <Notification message={errorMessage} />}
+			<Notification />
 			{user === null ? (
 				<div>
 					<h2>Log in to application</h2>
