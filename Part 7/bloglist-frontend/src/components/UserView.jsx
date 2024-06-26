@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-const User = ({ user }) => {
+const UserView = ({ user }) => {
 	const blogs = useSelector((state) => state.blogs)
 
 	return (
@@ -20,4 +20,4 @@ const User = ({ user }) => {
 	)
 }
 
-export default User
+export default UserView
