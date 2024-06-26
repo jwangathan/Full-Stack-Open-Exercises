@@ -5,15 +5,17 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import UserList from './components/UserList'
+import User from './components/User'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/authReducer'
 import { initializeUsers } from './reducers/usersReducer'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
 
 const App = () => {
 	const dispatch = useDispatch()
 	const currUser = useSelector((state) => state.authentication)
+	const users = useSelector((state) => state.users)
 	const blogFormRef = useRef()
 
 	useEffect(() => {
@@ -28,6 +30,9 @@ const App = () => {
 			dispatch(setUser(user))
 		}
 	}, [])
+
+	const match = useMatch('/users/:id')
+	const user = match ? users.find((user) => user.id === match.params.id) : null
 
 	const handleLogout = (event) => {
 		event.preventDefault()
@@ -45,10 +50,8 @@ const App = () => {
 			) : (
 				<div>
 					<h2>Blogs</h2>
-					<p>
-						{currUser.name} logged in
-						<button onClick={handleLogout}>logout</button>
-					</p>
+					<p>{currUser.name} logged in </p>
+					<button onClick={handleLogout}>logout</button>
 
 					<Routes>
 						<Route
@@ -63,6 +66,7 @@ const App = () => {
 							}
 						/>
 						<Route path="/users" element={<UserList />} />
+						<Route path="/users/:id" element={<User user={user} />} />
 					</Routes>
 				</div>
 			)}
