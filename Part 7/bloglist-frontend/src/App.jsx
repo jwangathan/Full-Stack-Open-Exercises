@@ -12,6 +12,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/authReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { Routes, Route, Link, useMatch } from 'react-router-dom'
+import Navigation from './components/Navigation'
 
 const App = () => {
 	const dispatch = useDispatch()
@@ -19,9 +20,6 @@ const App = () => {
 	const users = useSelector((state) => state.users)
 	const blogs = useSelector((state) => state.blogs)
 	const blogFormRef = useRef()
-	const padding = {
-		padding: 5,
-	}
 
 	useEffect(() => {
 		dispatch(initializeBlogs())
@@ -46,28 +44,9 @@ const App = () => {
 		? blogs.find((blog) => blog.id === matchBlog.params.id)
 		: null
 
-	const handleLogout = (event) => {
-		event.preventDefault()
-		console.log('logging out user', currUser.name)
-
-		window.localStorage.clear()
-		dispatch(logout())
-	}
-
 	return (
 		<div>
-			{currUser && (
-				<div>
-					<Link style={padding} to="/">
-						blogs
-					</Link>
-					<Link style={padding} to="/users">
-						users
-					</Link>
-					{currUser.name} logged in
-					<button onClick={handleLogout}>logout</button>
-				</div>
-			)}
+			{currUser && <Navigation />}
 			<Notification />
 			{currUser === null ? (
 				<LoginForm />

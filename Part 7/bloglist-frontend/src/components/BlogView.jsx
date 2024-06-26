@@ -31,7 +31,7 @@ const BlogView = ({ blog }) => {
 		event.target.comment.value = ''
 		dispatch(addComment(blog.id, content))
 	}
-
+	console.log(blog)
 	return (
 		<div>
 			{blog && (
