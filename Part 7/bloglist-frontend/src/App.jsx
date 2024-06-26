@@ -8,11 +8,10 @@ import Togglable from './components/Togglable'
 import UserList from './components/UserList'
 import UserView from './components/UserView'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, deleteBlog, updateBlog } from './reducers/blogReducer'
-import { displayNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { setUser, logout } from './reducers/authReducer'
 import { initializeUsers } from './reducers/usersReducer'
-import { Routes, Route, useMatch } from 'react-router-dom'
+import { Routes, Route, Link, useMatch } from 'react-router-dom'
 
 const App = () => {
 	const dispatch = useDispatch()
@@ -20,6 +19,9 @@ const App = () => {
 	const users = useSelector((state) => state.users)
 	const blogs = useSelector((state) => state.blogs)
 	const blogFormRef = useRef()
+	const padding = {
+		padding: 5,
+	}
 
 	useEffect(() => {
 		dispatch(initializeBlogs())
@@ -52,38 +54,32 @@ const App = () => {
 		dispatch(logout())
 	}
 
-	const handleLike = (blog) => {
-		const changedBlog = {
-			...blog,
-			likes: blog.likes + 1,
-		}
-		dispatch(updateBlog(changedBlog))
-		dispatch(displayNotification(`you liked '${changedBlog.title}'`, 5))
-	}
-
-	const handleDelete = (blog) => {
-		if (window.confirm(`Remove blog '${blog.title}' by ${blog.author}`)) {
-			dispatch(deleteBlog(blog.id))
-			dispatch(displayNotification(`'${blog.title}' Successfully deleted!`, 5))
-		}
-	}
-
 	return (
 		<div>
+			{currUser && (
+				<div>
+					<Link style={padding} to="/">
+						blogs
+					</Link>
+					<Link style={padding} to="/users">
+						users
+					</Link>
+					{currUser.name} logged in
+					<button onClick={handleLogout}>logout</button>
+				</div>
+			)}
 			<Notification />
 			{currUser === null ? (
 				<LoginForm />
 			) : (
 				<div>
-					<h2>Blogs</h2>
-					<p>{currUser.name} logged in </p>
-					<button onClick={handleLogout}>logout</button>
-
+					<h2>Blog app</h2>
 					<Routes>
 						<Route
 							path="/"
 							element={
 								<div>
+									<h2>Blogs</h2>
 									<Togglable buttonLabel="new blog" ref={blogFormRef}>
 										<BlogForm />
 									</Togglable>
@@ -93,16 +89,7 @@ const App = () => {
 						/>
 						<Route path="/users" element={<UserList />} />
 						<Route path="/users/:id" element={<UserView user={user} />} />
-						<Route
-							path="/blogs/:id"
-							element={
-								<BlogView
-									blog={blog}
-									updateLike={handleLike}
-									removeBlog={handleDelete}
-								/>
-							}
-						/>
+						<Route path="/blogs/:id" element={<BlogView blog={blog} />} />
 					</Routes>
 				</div>
 			)}

@@ -21,11 +21,19 @@ const create = async (newBlog) => {
 	return response.data
 }
 
-const update = (id, updatedBlog) => {
+const like = (id, updatedBlog) => {
 	const config = {
 		headers: { Authorization: token },
 	}
 	const request = axios.put(`${baseUrl}/${id}`, updatedBlog, config)
+	return request.then((response) => response.data)
+}
+
+const comment = (id, updatedBlog) => {
+	const config = {
+		headers: { Authorization: token },
+	}
+	const request = axios.post(`${baseUrl}/${id}/comments`, updatedBlog, config)
 	return request.then((response) => response.data)
 }
 
@@ -37,4 +45,4 @@ const remove = (id) => {
 	return request.then((response) => response.data)
 }
 
-export default { getAll, setToken, create, update, remove }
+export default { getAll, setToken, create, like, comment, remove }
