@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/blogs/667b8da89327a0aa2769d269/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvbmF0aGFuX3dhbmciLCJpZCI6IjY2N2I0MzI4YzEwNTE3YWM3ZWRlOTA2MSIsImlhdCI6MTcxOTQyODkxOX0.xY9nzYOluzH1V9ztzziW89JKBjleQJ2-d-BFyEtUxG0
+
+{
+  "content": "hello there"
+}
