@@ -4,7 +4,7 @@ import { deleteBlog, updateBlog } from '../reducers/blogReducer'
 import { displayNotification } from '../reducers/notificationReducer'
 
 const Blog = ({ blog, updateLike, removeBlog }) => {
-	const user = useSelector((state) => state.user)
+	const currUser = useSelector((state) => state.authentication)
 	const [view, setView] = useState(false)
 	const label = view ? 'hide' : 'view'
 	const blogStyle = {
@@ -14,7 +14,6 @@ const Blog = ({ blog, updateLike, removeBlog }) => {
 		borderWidth: 1,
 		marginBottom: 5,
 	}
-
 	return (
 		<div style={blogStyle} className="blog">
 			<span>
@@ -29,7 +28,7 @@ const Blog = ({ blog, updateLike, removeBlog }) => {
 					<br></br>
 					{blog.user.name}
 					<br></br>
-					{user.username === blog.user.username && (
+					{currUser.username === blog.user.username && (
 						<button onClick={removeBlog}>remove</button>
 					)}
 				</div>

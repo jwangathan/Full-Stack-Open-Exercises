@@ -3,8 +3,8 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 import { displayNotification } from './notificationReducer'
 
-const userSlice = createSlice({
-	name: 'user',
+const authSlice = createSlice({
+	name: 'authentication',
 	initialState: null,
 	reducers: {
 		setUser(state, action) {
@@ -35,5 +35,5 @@ export const loginUser = (username, password) => {
 	}
 }
 
-export const { setUser, logout } = userSlice.actions
-export default userSlice.reducer
+export const { setUser, logout } = authSlice.actions
+export default authSlice.reducer
