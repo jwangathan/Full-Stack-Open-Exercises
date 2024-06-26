@@ -25,28 +25,6 @@ const App = () => {
 		}
 	}, [])
 
-	/*
-	const handleLogin = async (event) => {
-		event.preventDefault()
-		console.log('logging in with', username, password)
-
-		try {
-			const user = await loginService.login({
-				username,
-				password,
-			})
-			window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-			blogService.setToken(user.token)
-			dispatch(displayNotification(`logged in ${user.name}`, 5))
-			setUser(user)
-			setUsername('')
-			setPassword('')
-		} catch (exception) {
-			dispatch(displayNotification('wrong credentials', 5))
-		}
-	}
-	*/
-
 	const handleLogout = (event) => {
 		event.preventDefault()
 		console.log('logging out user', user.name)
@@ -54,33 +32,7 @@ const App = () => {
 		window.localStorage.clear()
 		dispatch(logout())
 	}
-	/*
-	const loginForm = () => (
-		<form onSubmit={handleLogin}>
-			<div>
-				username
-				<input
-					type="text"
-					value={username}
-					name="Username"
-					onChange={({ target }) => setUsername(target.value)}
-					data-testid="username"
-				/>
-			</div>
-			<div>
-				password
-				<input
-					type="text"
-					value={password}
-					name="Password"
-					onChange={({ target }) => setPassword(target.value)}
-					data-testid="password"
-				/>
-			</div>
-			<button type="submit">login</button>
-		</form>
-	)
-	*/
+
 	return (
 		<div>
 			<Notification />
