@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/authReducer'
 import { initializeUsers } from './reducers/usersReducer'
-import { Routes, Route, Link, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
 import Navigation from './components/Navigation'
 
 const App = () => {
@@ -45,14 +45,13 @@ const App = () => {
 		: null
 
 	return (
-		<div>
+		<div className="container">
 			{currUser && <Navigation />}
 			<Notification />
 			{currUser === null ? (
 				<LoginForm />
 			) : (
 				<div>
-					<h2>Blog app</h2>
 					<Routes>
 						<Route
 							path="/"

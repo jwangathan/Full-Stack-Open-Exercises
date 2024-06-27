@@ -1,14 +1,15 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
-  const notification = useSelector((state) => state.notification);
-  const style = {
-    border: "solid",
-    padding: 10,
-    borderWidth: 1,
-  };
+	const notification = useSelector((state) => state.notification)
+	return (
+		<div>
+			{notification && (
+				<Alert variant={notification.type}>{notification.message}</Alert>
+			)}
+		</div>
+	)
+}
 
-  return <div>{notification && <div style={style}>{notification}</div>}</div>;
-};
-
-export default Notification;
+export default Notification

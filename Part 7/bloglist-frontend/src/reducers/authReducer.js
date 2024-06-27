@@ -27,10 +27,10 @@ export const loginUser = (username, password) => {
 			.login({ username, password })
 			.then((user) => {
 				dispatch(setUser(user))
-				dispatch(displayNotification(`logged in ${user.name}`, 5))
+				dispatch(displayNotification(`logged in ${user.name}`, 'success', 5))
 			})
 			.catch(() => {
-				dispatch(displayNotification('wrong credentials', 5))
+				dispatch(displayNotification('wrong credentials', 'danger', 5))
 			})
 	}
 }

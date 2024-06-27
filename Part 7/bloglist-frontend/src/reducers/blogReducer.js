@@ -39,11 +39,17 @@ export const createBlog = (title, author, url) => {
 			.then((res) => {
 				dispatch(appendBlog(res))
 				dispatch(
-					displayNotification(`A new blog '${title}' by ${author} added`, 5)
+					displayNotification(
+						`A new blog '${title}' by ${author} added`,
+						'success',
+						5
+					)
 				)
 			})
 			.catch(() => {
-				dispatch(displayNotification('incorrect/missing title or author', 5))
+				dispatch(
+					displayNotification('incorrect/missing title or author', 'danger', 5)
+				)
 			})
 	}
 }
@@ -61,10 +67,10 @@ export const addComment = (id, content) => {
 			.comment(id, { content: content })
 			.then((res) => {
 				dispatch(updateBlog(res))
-				dispatch(displayNotification('Comment added!', 5))
+				dispatch(displayNotification('Comment added!', 'success', 5))
 			})
 			.catch(() => {
-				dispatch(displayNotification('Error with adding comment', 5))
+				dispatch(displayNotification('Error with adding comment', 'danger', 5))
 			})
 	}
 }
@@ -72,7 +78,9 @@ export const addComment = (id, content) => {
 export const deleteBlog = (id) => {
 	return async (dispatch) => {
 		await blogService.remove(id).catch(() => {
-			dispatch(displayNotification(`Error deleting blog '${blog.title}'`, 5))
+			dispatch(
+				displayNotification(`Error deleting blog '${blog.title}'`, 'danger', 5)
+			)
 		})
 		dispatch(removeBlog(id))
 	}
