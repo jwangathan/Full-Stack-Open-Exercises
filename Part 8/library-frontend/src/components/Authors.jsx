@@ -3,7 +3,7 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 import { useState } from 'react'
 import Select from 'react-select'
 
-const Authors = () => {
+const Authors = ({ token }) => {
 	const [name, setName] = useState('')
 	const [born, setBorn] = useState('')
 	const authors = useQuery(ALL_AUTHORS)
@@ -17,8 +17,6 @@ const Authors = () => {
 
 	const submit = (event) => {
 		event.preventDefault()
-		console.log(name)
-		console.log(born)
 
 		editAuthor({ variables: { name, setBornTo: parseInt(born) } })
 
@@ -45,27 +43,31 @@ const Authors = () => {
 					))}
 				</tbody>
 			</table>
-			<h2>Set birthyear</h2>
-			<form onSubmit={submit}>
-				<div>
-					name{' '}
-					<Select
-						defaultValue={name}
-						onChange={(target) => setName(target.value)}
-						options={authors.data.allAuthors.map((a) => {
-							return { value: a.name, label: a.name }
-						})}
-					/>
-				</div>
-				<div>
-					born{' '}
-					<input
-						value={born}
-						onChange={({ target }) => setBorn(target.value)}
-					/>
-				</div>
-				<button type="submit">update author</button>
-			</form>
+			{token && (
+				<>
+					<h2>Set birthyear</h2>
+					<form onSubmit={submit}>
+						<div>
+							name{' '}
+							<Select
+								defaultValue={name}
+								onChange={(target) => setName(target.value)}
+								options={authors.data.allAuthors.map((a) => {
+									return { value: a.name, label: a.name }
+								})}
+							/>
+						</div>
+						<div>
+							born{' '}
+							<input
+								value={born}
+								onChange={({ target }) => setBorn(target.value)}
+							/>
+						</div>
+						<button type="submit">update author</button>
+					</form>
+				</>
+			)}
 		</div>
 	)
 }
