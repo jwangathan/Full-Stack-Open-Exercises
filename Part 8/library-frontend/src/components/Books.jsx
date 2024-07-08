@@ -20,7 +20,13 @@ const Books = () => {
 		<div>
 			<h2>books</h2>
 
-			{genreFilter ? <p>in genre {genreFilter}</p> : <p>Showing all genres</p>}
+			{genreFilter ? (
+				<p>
+					in genre <strong>{genreFilter}</strong>
+				</p>
+			) : (
+				<p>Showing all genres</p>
+			)}
 			<table>
 				<tbody>
 					<tr>
