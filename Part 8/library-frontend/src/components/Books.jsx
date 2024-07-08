@@ -7,7 +7,7 @@ const Books = () => {
 	const books = useQuery(ALL_BOOKS, { variables: { genre: genreFilter } })
 	const allBooks = useQuery(ALL_BOOKS)
 
-	if (books.loading) {
+	if (books.loading || allBooks.loading) {
 		return <div>loading books...</div>
 	}
 
