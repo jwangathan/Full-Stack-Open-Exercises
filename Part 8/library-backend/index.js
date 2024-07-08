@@ -148,6 +148,9 @@ const resolvers = {
 			// 		(!args.genre || b.genres.includes(args.genre))
 			// 	)
 			// })
+			if (args.genre) {
+				return Book.find({ genres: args.genre })
+			}
 			return Book.find({})
 		},
 		allAuthors: async (root, args) => {
@@ -158,6 +161,16 @@ const resolvers = {
 		bookCount: (root) => {
 			const authorsBooks = books.filter((b) => b.author === root.name)
 			return authorsBooks.length
+		},
+	},
+	Book: {
+		author: async (root) => {
+			const author = await Author.findById(root.author)
+			return {
+				id: author.id,
+				name: author.name,
+				born: author.born,
+			}
 		},
 	},
 	Mutation: {
@@ -177,15 +190,11 @@ const resolvers = {
 			const book = new Book({ ...args, author: author })
 			return book.save()
 		},
-		editAuthor: (root, args) => {
-			const author = authors.find((a) => a.name === args.name)
-			if (!author) {
-				return null
-			}
-
-			const updatedAuthor = { ...author, born: args.setBornTo }
-			authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
-			return updatedAuthor
+		editAuthor: async (root, args) => {
+			const author = await Author.findOne({ name: args.name })
+			author.born = args.setBornTo
+			await author.save()
+			return author
 		},
 	},
 }
