@@ -2,9 +2,19 @@ const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
+const DataLoader = require('dataloader')
+
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+
+const bookLoader = new DataLoader(async (authorIds) => {
+	const books = await Book.find({ author: { $in: authorIds } })
+	const booksByAuthor = authorIds.map((id) =>
+		books.filter((b) => b.author.toString() === id.toString())
+	)
+	return booksByAuthor
+})
 
 const resolvers = {
 	Query: {
@@ -17,15 +27,21 @@ const resolvers = {
 			return Book.find({})
 		},
 		allAuthors: async (root, args) => {
-			return Author.find({})
+			return Author.find({}).populate('books')
 		},
 		me: (root, args, context) => {
 			return context.currentUser
 		},
 	},
 	Author: {
-		bookCount: async (root) =>
-			Book.collection.countDocuments({ author: root._id }),
+		bookCount: async (root) => {
+			const books = await bookLoader.load(root.id)
+			return books.length
+		},
+		books: async (root) => {
+			const books = await bookLoader.load(root.id)
+			return books
+		},
 	},
 	Book: {
 		author: async (root) => {
