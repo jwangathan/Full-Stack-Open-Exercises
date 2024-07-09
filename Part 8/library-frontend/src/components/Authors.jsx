@@ -24,6 +24,7 @@ const Authors = ({ token }) => {
 		setBorn('')
 	}
 
+	const authorResult = authors.data.allAuthors
 	return (
 		<div>
 			<h2>authors</h2>
@@ -34,7 +35,7 @@ const Authors = ({ token }) => {
 						<th>born</th>
 						<th>books</th>
 					</tr>
-					{authors.data.allAuthors.map((a) => (
+					{authorResult.map((a) => (
 						<tr key={a.name}>
 							<td>{a.name}</td>
 							<td>{a.born}</td>
