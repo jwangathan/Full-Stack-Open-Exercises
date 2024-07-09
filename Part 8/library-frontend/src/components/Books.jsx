@@ -4,7 +4,9 @@ import { useState } from 'react'
 
 const Books = () => {
 	const [genreFilter, setGenreFilter] = useState('')
-	const books = useQuery(ALL_BOOKS, { variables: { genre: genreFilter } })
+	const books = useQuery(ALL_BOOKS, {
+		variables: genreFilter && { genre: genreFilter },
+	})
 	const allBooks = useQuery(ALL_BOOKS)
 
 	if (books.loading || allBooks.loading) {
