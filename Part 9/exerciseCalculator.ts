@@ -29,7 +29,7 @@ const parseArgs = (args: string[]): exerciseValues => {
 	}
 };
 
-const calculateExercises = (hours: number[], target: number): Result => {
+export const calculateExercises = (hours: number[], target: number): Result => {
 	const length = hours.length;
 	const trainedDays = hours.filter((num) => num > 0).length;
 	const average = hours.reduce((total, value) => total + value, 0) / length;
